@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!---------------  CSS  --------------------->
+    <link rel="stylesheet" href="style.css">
+    <title>Beam Analysis Project</title>
+    <!---------------  IONICONS  --------------------->
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    <style>
+        body {
+            background-color: rgb(27, 31, 41); /* Black background */
+            color: #fff; /* White text */
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        #input-form {
+            margin: 20px;
+            font-size: 1.4rem;
+        }
+
+        #beam-diagram {
+            margin-top: 20px;
+        }
+
+        #beam-svg {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #uvl-label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #output {
+            margin:150px 20px;
+            font-size: 1.8rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="./assets/rscoe.png" alt="logo" class="logo">
+        <h2 class="header">JSPM's RSCOE</h2>
+        <ul>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./POINT LOAD MAIN.html">Point Load</a></li>
+            <li><a href="./UDL MAIN.html">UDL</a></li>
+            <li><a href="./aboutus.html">About US</a></li>
+        </ul>
+    </nav>
+    <div id="container">
+        <h1>UVL Beam Calculator</h1>
+
+        <div id="input-form">
+            <h2>Input Parameters</h2>
+            <form id="beam-form">
+                <label for="length">Beam Length (m):</label>
+                <input type="number" id="length" step="0.01" required><br><br>
+
+                <label for="uvlLoad1">UVL Load at Start (N/m):</label>
+                <input type="number" id="uvlLoad1" step="1" required><br><br>
+
+                <label for="uvlLoad2">UVL Load at End (N/m):</label>
+                <input type="number" id="uvlLoad2" step="1" required><br><br>
+
+                <button type="button" onclick="calculateUVL()">Calculate</button>
+            </form>
+        </div>
+
+        <div id="beam-diagram">
+            <svg id="beam-svg" xmlns="http://www.w3.org/2000/svg">
+                
+                <!-- Draw a white rectangle for the length of the beam -->
+                <rect x="10" y="100" width="380" height="15" fill="white" />
+
+                <!-- Draw the UVL load as a shaded triangle -->
+                <polygon points="10,100 10,10 390,100" fill="grey" fill-opacity="0.6" />
+
+                <!-- Add arrows in a uniformly decreasing way from the left, perpendicular to the base -->
+                <line x1="25" y1="15" x2="25" y2="100" stroke="white" stroke-width="2" />
+                <!-- Label the lower ends of the beam as A and B at the bottom -->
+                <text x="7" y="135" fill="white" font-size="20">A</text>
+                <text x="385" y="135" fill="white" font-size="20">B</text>
+
+                <!-- Add arrows in a uniformly decreasing way from the left, perpendicular to the base -->
+                <line x1="25" y1="15" x2="25" y2="100" stroke="white" stroke-width="2" />
+                <line x1="55" y1="23" x2="55" y2="100" stroke="white" stroke-width="2" />
+                <line x1="85" y1="30" x2="85" y2="100" stroke="white" stroke-width="2" />
+                <line x1="115" y1="37" x2="115" y2="100" stroke="white" stroke-width="2" />
+                <line x1="145" y1="44" x2="145" y2="100" stroke="white" stroke-width="2" />
+                <line x1="175" y1="51" x2="175" y2="100" stroke="white" stroke-width="2" />
+                <line x1="205" y1="58" x2="205" y2="100" stroke="white" stroke-width="2" />
+                <line x1="235" y1="65" x2="235" y2="100" stroke="white" stroke-width="2" />
+                <line x1="265" y1="72" x2="265" y2="100" stroke="white" stroke-width="2" />
+                <line x1="295" y1="78" x2="295" y2="100" stroke="white" stroke-width="2" />
+                <line x1="325" y1="85" x2="325" y2="100" stroke="white" stroke-width="2" />
+                <line x1="355" y1="92" x2="355" y2="100" stroke="white" stroke-width="2" />
+                
+            </svg>
+            <div id="uvl-label">Uniformly Varying Load (UVL)</div>
+        </div>
+
+        <div id="output">
+            <h2>Reactions</h2>
+            <p id="reactionA">Reaction at Left Position (A): </p>
+            <p id="reactionB">Reaction at Right Position (B): </p>
+        </div>
+    </div>
+
+    <script>
+        function calculateUVL() {
+            const length = parseFloat(document.getElementById("length").value);
+            const uvlLoad1 = parseFloat(document.getElementById("uvlLoad1").value);
+            const uvlLoad2 = parseFloat(document.getElementById("uvlLoad2").value);
+
+            const a = uvlLoad1;
+            const b = uvlLoad2;
+            const beamSize = length;
+
+            const loadrect = beamSize * a;
+            const loadtri = (0.5 * beamSize) * (b - a);
+            const mom = ((loadrect * 0.5) * beamSize) + (loadtri * (2 / 3) * beamSize);
+            const rightPosition = mom / beamSize;
+            const leftPosition = loadrect + loadtri - rightPosition;
+
+            // Update the output elements with the calculated values
+            document.getElementById("reactionA").textContent = `Reaction at Left Position (A): ${leftPosition.toFixed(2)} N`;
+            document.getElementById("reactionB").textContent = `Reaction at Right Position (B): ${rightPosition.toFixed(2)} N`;
+        }
+    </script>
+</body>
+</html>

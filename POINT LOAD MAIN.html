@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!---------------  CSS  --------------------->
+    <link rel="stylesheet" href="style.css">
+    <title>Beam Analysis Project</title>
+    <!---------------  IONICONS  --------------------->
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    <style>
+        body {
+            background-color: rgb(27, 31, 41); /* Black background */
+            color: #fff; /* White text */
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        #input-form {
+            margin: 20px;
+            font-size: 1.4rem;
+        }
+
+        #beam-diagram {
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        #output {
+            margin: 20px;
+            font-size: 1.8rem;
+        }
+
+        #beam-svg {
+            width: 100%;
+            max-width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="./assets/rscoe.png" alt="logo" class="logo">
+        <h2 class="header">JSPM's RSCOE</h2>
+        <ul>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./UDL MAIN.html">UDL</a></li>
+            <li><a href="./UVL MAIN.html">UVL</a></li>
+            <li><a href="./aboutus.html">About US</a></li>
+        </ul>
+    </nav>
+    <div id="container">
+        <h1>Point Load Beam Calculator</h1>
+
+        <div id="input-form">
+            <h2>Input Parameters</h2>
+            <form id="beam-form">
+                <label for="length">Beam Length (m):</label>
+                <input type="number" id="length" step="0.01" required><br><br>
+
+                <label for="pointLoad">Point Load (N):</label>
+                <input type="number" id="pointLoad" step="1" required><br><br>
+
+                <button type="button" onclick="calculatePointLoad()">Calculate</button>
+            </form>
+        </div>
+
+        <div id="beam-diagram">
+            <!-- The beam diagram SVG will be generated here -->
+            <svg id="beam-svg" xmlns="http://www.w3.org/2000/svg">
+                <!-- Draw the beam as a line -->
+                <line x1="10" y1="100" x2="390" y2="100" stroke="black" stroke-width="5" />
+            
+                <!-- Draw a white rectangle for the length of the beam -->
+                <rect x="10" y="95" width="380" height="10" fill="white" />
+            
+                <!-- Draw white triangle "A" at the start -->
+                <polygon points="10,100 20,100 15,120" fill="white" />
+                <text x="12" y="135" fill="white">A</text>
+            
+                <!-- Draw white triangle "B" at the end -->
+                <polygon points="390,100 380,100 385,120" fill="white" />
+                <text x="383" y="135" fill="white">B</text>
+            
+               <!-- Draw white triangle "B" at the end -->
+               <polygon points="390,100 380,100 385,120" fill="white" />
+               <text x="383" y="135" fill="white">B</text>
+
+             <!-- Add an arrow at the center of the rectangular beam pointing downwards and inverted -->
+                <line x1="200" y1="90" x2="200" y2="30" stroke="white" stroke-width="5" />
+                <polygon points="195,80 200,101 205,80" fill="white" />
+            </svg>
+            
+        </div>
+
+        <div id="output">
+            <h2>Reactions</h2>
+            <p id="reactionA">Reaction at Left Position (A):   </p>
+            <p id="reactionB">Reaction at Right Position (B):   </p>
+            <p id="loadMagnitude">Point Load Acting :    </p>
+        </div>
+    </div>
+
+    <script>
+        function calculatePointLoad() {
+            const length = parseFloat(document.getElementById("length").value);
+            const pointLoad = parseFloat(document.getElementById("pointLoad").value);
+
+            // Calculate left and right reactions and load magnitude
+            const leftPosition = pointLoad * 0.5;
+            const rightPosition = pointLoad * 0.5;
+            const loadMagnitude = pointLoad;
+
+            // Update the output elements with the calculated values
+            document.getElementById("reactionA").textContent = `Reaction at Left Position (A): ${leftPosition} N`;
+            document.getElementById("reactionB").textContent = `Reaction at Right Position (B): ${rightPosition} N`;
+            document.getElementById("loadMagnitude").textContent = `Point Load Acting: ${loadMagnitude} N`;
+        }
+    </script>
+</body>
+</html>
